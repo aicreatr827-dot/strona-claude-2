@@ -8,7 +8,7 @@
 <style>
   .about-hero { min-height:70vh; background:linear-gradient(135deg,#1a2e1a 0%,#2d4a2d 55%,#4a7c4a 100%); display:flex; align-items:center; padding:calc(var(--space-8) + 2rem) var(--page-margin) var(--space-8); position:relative; overflow:hidden; }
   .about-hero::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:60px; background:var(--cream); border-radius:40px 40px 0 0; }
-  .about-hero-inner { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; width:100%; }
+  .about-hero-inner { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; width:100%; padding:0 5vw; box-sizing:border-box; }
   .about-hero-title { font-family:var(--font-heading); font-size:clamp(var(--text-h2),5vw,var(--text-h1)); font-weight:900; color:var(--white); line-height:1.1; margin-bottom:var(--space-3); }
   .about-hero-title em { font-style:normal; color:var(--green-pale); }
   .about-hero-desc { font-size:var(--text-body); color:rgba(255,255,255,0.7); line-height:var(--leading-body); font-family:var(--font-body); max-width:var(--max-text-width); }
