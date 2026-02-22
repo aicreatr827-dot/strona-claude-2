@@ -53,7 +53,7 @@ function showCartToast(name) {
     toast.style.cssText = `position:fixed;bottom:2rem;right:2rem;z-index:9999;background:#2d4a2d;color:#fff;padding:1rem 1.5rem;border-radius:12px;font-family:Arial,sans-serif;font-size:0.9rem;box-shadow:0 12px 40px rgba(0,0,0,0.25);display:flex;align-items:center;gap:0.7rem;transform:translateY(100px);opacity:0;transition:all 0.35s cubic-bezier(.34,1.56,.64,1);`;
     document.body.appendChild(toast);
   }
-  toast.innerHTML = `<span style="font-size:1.2rem">🛒</span><div><strong>${name}</strong><br><span style="opacity:.7;font-size:.8rem">Dodano do koszyka</span></div>`;
+  toast.innerHTML = `<span style="font-size:1.2rem">🛒</span><div><strong>${name}</strong><br><span style="opacity:.7;font-size:.8rem">Dodano do koszyka</span></div><a href="koszyk.html" style="margin-left:0.5rem;padding:0.4rem 0.9rem;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:100px;color:#fff;font-size:0.78rem;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;">Koszyk →</a>`;
   requestAnimationFrame(() => { toast.style.transform = 'translateY(0)'; toast.style.opacity = '1'; });
   clearTimeout(toast._timer);
   toast._timer = setTimeout(() => { toast.style.transform = 'translateY(100px)'; toast.style.opacity = '0'; }, 3000);
