@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Koszyk — GardenCraft</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+  .cart-page { padding:8rem 5vw 5rem; min-height:80vh; }
+  .cart-layout { display:grid; grid-template-columns:1fr 380px; gap:2.5rem; align-items:start; }
+  .cart-items-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
+  .cart-items-title { font-family:var(--font-heading); font-size:1.6rem; font-weight:900; color:var(--text-dark); }
+  .clear-btn { background:none; border:none; color:var(--text-light); font-size:0.82rem; cursor:pointer; font-family:var(--font-body); text-decoration:underline; }
+  .clear-btn:hover { color:#c0392b; }
+  .cart-item { background:var(--white); border-radius:16px; padding:1.2rem 1.5rem; display:grid; grid-template-columns:72px 1fr auto; gap:1.2rem; align-items:center; margin-bottom:1rem; border:1px solid rgba(45,74,45,0.06); box-shadow:0 2px 12px rgba(45,74,45,0.05); transition:box-shadow 0.2s; }
+  .cart-item:hover { box-shadow:0 4px 24px rgba(45,74,45,0.1); }
+  .cart-img { width:72px; height:72px; border-radius:12px; object-fit:cover; background:var(--cream); display:flex; align-items:center; justify-content:center; font-size:2rem; overflow:hidden; flex-shrink:0; }
+  .cart-img img { width:100%; height:100%; object-fit:cover; }
+  .cart-category { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--green-mid); font-weight:700; margin-bottom:0.2rem; font-family:var(--font-body); }
+  .cart-name { font-weight:700; font-size:0.95rem; color:var(--text-dark); margin-bottom:0.4rem; line-height:1.3; font-family:var(--font-body); }
+  .cart-unit-price { font-size:0.8rem; color:var(--text-light); font-family:var(--font-body); }
+  .cart-right { display:flex; flex-direction:column; align-items:flex-end; gap:0.8rem; }
+  .cart-total { font-family:var(--font-heading); font-size:1.1rem; font-weight:900; color:var(--green-deep); }
+  .qty-control { display:flex; align-items:center; background:var(--cream); border-radius:100px; overflow:hidden; }
+  .qty-btn { background:none; border:none; width:30px; height:30px; cursor:pointer; font-size:1rem; font-family:var(--font-body); }
+  .qty-btn:hover { background:var(--green-pale); }
+  .qty-num { width:30px; text-align:center; font-size:0.88rem; font-weight:700; font-family:var(--font-body); }
+  .remove-btn { background:none; border:none; color:var(--text-light); cursor:pointer; font-size:0.75rem; font-family:var(--font-body); text-decoration:underline; }
+  .remove-btn:hover { color:#c0392b; }
+  .empty-cart { text-align:center; padding:5rem 2rem; background:var(--white); border-radius:20px; }
+  .empty-icon { font-size:4rem; margin-bottom:1.5rem; }
+  .empty-title { font-family:var(--font-heading); font-size:1.6rem; color:var(--text-dark); margin-bottom:0.8rem; font-weight:900; }
+  .empty-desc { color:var(--text-light); font-size:0.95rem; margin-bottom:2rem; font-family:var(--font-body); }
+  .empty-links { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+  .order-summary { background:var(--white); border-radius:20px; padding:2rem; border:1px solid rgba(45,74,45,0.08); box-shadow:0 4px 24px rgba(45,74,45,0.07); position:sticky; top:6rem; }
+  .summary-title { font-family:var(--font-heading); font-size:1.2rem; font-weight:900; color:var(--text-dark); margin-bottom:1.5rem; }
+  .summary-row { display:flex; justify-content:space-between; font-size:0.88rem; color:var(--text-mid); margin-bottom:0.8rem; font-family:var(--font-body); }
+  .summary-divider { border:none; border-top:1px solid rgba(45,74,45,0.1); margin:1.2rem 0; }
+  .summary-total { display:flex; justify-content:space-between; font-size:1rem; font-weight:700; color:var(--text-dark); margin-bottom:1.5rem; font-family:var(--font-body); }
+  .summary-total-val { font-family:var(--font-heading); font-size:1.4rem; color:var(--green-deep); font-weight:900; }
+  .promo-row { display:flex; gap:0.5rem; margin-bottom:1.5rem; }
+  .promo-input { flex:1; padding:0.65rem 1rem; border-radius:100px; border:1.5px solid rgba(45,74,45,0.2); font-family:var(--font-body); font-size:0.85rem; outline:none; transition:border-color 0.2s; }
+  .promo-input:focus { border-color:var(--green-mid); }
+  .promo-btn { padding:0.65rem 1.1rem; border-radius:100px; background:var(--cream); border:none; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:var(--font-body); color:var(--text-dark); transition:all 0.2s; }
+  .promo-btn:hover { background:var(--green-pale); }
+  .trust-items { margin-top:1.5rem; display:flex; flex-direction:column; gap:0.6rem; }
+  .trust-item { display:flex; align-items:center; gap:0.6rem; font-size:0.8rem; color:var(--text-light); font-family:var(--font-body); }
+  .checkout-section { margin-top:2rem; padding-top:2rem; border-top:1px solid rgba(45,74,45,0.1); }
+  .checkout-title { font-family:var(--font-heading); font-size:1rem; font-weight:900; color:var(--text-dark); margin-bottom:1.2rem; }
+  .form-group { margin-bottom:1rem; }
+  .form-label { display:block; font-size:0.78rem; font-weight:700; color:var(--text-mid); margin-bottom:0.4rem; letter-spacing:0.04em; font-family:var(--font-body); }
+  .form-input { width:100%; padding:0.7rem 1rem; border-radius:10px; border:1.5px solid rgba(45,74,45,0.15); font-family:var(--font-body); font-size:0.88rem; color:var(--text-dark); background:var(--cream); outline:none; transition:border-color 0.2s; }
+  .form-input:focus { border-color:var(--green-mid); background:var(--white); }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .success-overlay { display:none; position:fixed; inset:0; background:rgba(20,40,20,0.7); backdrop-filter:blur(6px); z-index:500; align-items:center; justify-content:center; }
+  .success-overlay.open { display:flex; }
+  .success-modal { background:var(--white); border-radius:28px; padding:3rem 2.5rem; max-width:460px; width:90%; text-align:center; animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes popIn { from{transform:scale(0.7);opacity:0;}to{transform:none;opacity:1;} }
+  .success-icon { font-size:4rem; margin-bottom:1.2rem; }
+  .success-title { font-family:var(--font-heading); font-size:1.6rem; font-weight:900; color:var(--text-dark); margin-bottom:0.8rem; }
+  .success-desc { font-size:0.95rem; color:var(--text-mid); line-height:1.7; font-family:var(--font-body); margin-bottom:2rem; }
+  @media(max-width:900px){ .cart-layout{grid-template-columns:1fr;} .cart-item{grid-template-columns:60px 1fr;} .cart-right{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;} .order-summary{position:static;} .form-row{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Garden<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="domki.html">Domki</a></li>
+    <li><a href="fotele.html">Meble</a></li>
+    <li><a href="uslugi.html">Usługi</a></li>
+    <li><a href="o-nas.html">O nas</a></li>
+  </ul>
+  <a href="koszyk.html" class="nav-cart" style="background:var(--green-mid);">🛒 Koszyk <span class="cart-badge">0</span></a>
+</nav>
+
+<div class="cart-page">
+  <div style="margin-bottom:2.5rem;">
+    <div class="section-label">Zamówienie</div>
+    <h1 style="font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);font-weight:900;color:var(--text-dark);">Twój <em style="font-style:italic;color:var(--green-mid);">koszyk</em></h1>
+  </div>
+  <div class="cart-layout">
+    <div>
+      <div class="cart-items-header">
+        <div class="cart-items-title" id="cart-count-label">Produkty</div>
+        <button class="clear-btn" onclick="clearAll()">Wyczyść koszyk</button>
+      </div>
+      <div id="cart-items-container"></div>
+      <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+        <a href="domki.html" class="btn-outline" style="font-size:0.85rem;padding:0.6rem 1.2rem;">+ Domki ogrodowe</a>
+        <a href="fotele.html" class="btn-outline" style="font-size:0.85rem;padding:0.6rem 1.2rem;">+ Meble ogrodowe</a>
+        <a href="uslugi.html" class="btn-outline" style="font-size:0.85rem;padding:0.6rem 1.2rem;">+ Usługi ogrodnicze</a>
+      </div>
+    </div>
+    <div>
+      <div class="order-summary">
+        <div class="summary-title">Podsumowanie zamówienia</div>
+        <div class="summary-row"><span>Produkty</span><span id="sum-subtotal">0 zł</span></div>
+        <div class="summary-row"><span>Wycena & konsultacja</span><span style="color:var(--green-mid);">Bezpłatna</span></div>
+        <div class="summary-row"><span>Dostawa / Realizacja</span><span>Wycena indywidualna</span></div>
+        <div class="promo-row">
+          <input class="promo-input" placeholder="Kod promocyjny" id="promo-code"/>
+          <button class="promo-btn" onclick="applyPromo()">Zastosuj</button>
+        </div>
+        <div id="discount-row" style="display:none;" class="summary-row"><span>Rabat (10%)</span><span id="discount-val" style="color:var(--green-mid);"></span></div>
+        <hr class="summary-divider"/>
+        <div class="summary-total"><span>Razem</span><span class="summary-total-val" id="sum-total">0 zł</span></div>
+        <div class="checkout-section">
+          <div class="checkout-title">Twoje dane kontaktowe</div>
+          <div class="form-group"><label class="form-label">Imię i nazwisko *</label><input class="form-input" type="text" id="f-name" placeholder="Jan Kowalski"/></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Telefon *</label><input class="form-input" type="tel" id="f-phone" placeholder="+48 600 000 000"/></div>
+            <div class="form-group"><label class="form-label">E-mail *</label><input class="form-input" type="email" id="f-email" placeholder="jan@email.pl"/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Adres / lokalizacja</label><input class="form-input" type="text" id="f-address" placeholder="ul. Ogrodowa 12, Warszawa"/></div>
+          <div class="form-group"><label class="form-label">Dodatkowe uwagi</label><input class="form-input" type="text" id="f-notes" placeholder="Np. preferowany termin realizacji..."/></div>
+          <button class="btn-primary" style="width:100%;justify-content:center;font-size:0.95rem;padding:1rem;margin-top:0.5rem;" onclick="submitOrder()" id="submit-btn">Wyślij zapytanie o wycenę →</button>
+        </div>
+        <div class="trust-items">
+          <div class="trust-item"><span>🔒</span> Bezpieczne dane</div>
+          <div class="trust-item"><span>📞</span> Oddzwonimy w ciągu 24h</div>
+          <div class="trust-item"><span>💬</span> Bezpłatna konsultacja</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="success-overlay" id="success-overlay">
+  <div class="success-modal">
+    <div class="success-icon">🌿</div>
+    <div class="success-title">Zapytanie wysłane!</div>
+    <div class="success-desc">Dziękujemy za zainteresowanie ofertą GardenCraft. Skontaktujemy się z Tobą w ciągu 24 godzin, aby omówić szczegóły i przygotować indywidualną wycenę.</div>
+    <a href="index.html" class="btn-primary" style="justify-content:center;">Wróć na stronę główną →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="logo">Garden<span style="color:var(--green-light)">Craft</span></a><p>Tworzymy ogrody, domki i przestrzenie zewnętrzne z pasją do natury.</p></div>
+    <div class="footer-col"><h4>Oferta</h4><ul><li><a href="domki.html">Domki ogrodowe</a></li><li><a href="fotele.html">Meble ogrodowe</a></li><li><a href="uslugi.html">Usługi ogrodnicze</a></li></ul></div>
+    <div class="footer-col"><h4>Firma</h4><ul><li><a href="o-nas.html">O nas</a></li><li><a href="index.html#testimonials">Opinie</a></li></ul></div>
+    <div class="footer-col"><h4>Kontakt</h4><ul><li><a href="tel:+48123456789">+48 123 456 789</a></li><li><a href="mailto:kontakt@gardencraft.pl">kontakt@gardencraft.pl</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 GardenCraft.</span><span>Polityka prywatności</span></div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+let discountApplied=false;
+function renderCart(){
+  const cart=getCart();
+  const container=document.getElementById('cart-items-container');
+  const label=document.getElementById('cart-count-label');
+  label.textContent=cart.length?`${cart.length} ${cart.length===1?'produkt':cart.length<5?'produkty':'produktów'} w koszyku`:'Koszyk';
+  if(cart.length===0){
+    container.innerHTML=`<div class="empty-cart"><div class="empty-icon">🛒</div><div class="empty-title">Koszyk jest pusty</div><div class="empty-desc">Dodaj domki, meble lub usługi ogrodnicze, które Cię interesują.</div><div class="empty-links"><a href="domki.html" class="btn-primary">Domki ogrodowe</a><a href="fotele.html" class="btn-outline">Meble ogrodowe</a><a href="uslugi.html" class="btn-outline">Usługi</a></div></div>`;
+    document.getElementById('submit-btn').disabled=true;document.getElementById('submit-btn').style.opacity='0.5';
+  } else {
+    container.innerHTML=cart.map(item=>`
+      <div class="cart-item">
+        <div class="cart-img">${item.img?`<img src="${item.img}" alt="${item.name}"/>`:'<span style="font-size:2rem">🌿</span>'}</div>
+        <div>
+          <div class="cart-category">${item.category||'GardenCraft'}</div>
+          <div class="cart-name">${item.name}</div>
+          <div class="cart-unit-price">${item.price.toLocaleString('pl-PL')} zł / szt.</div>
+        </div>
+        <div class="cart-right">
+          <div class="cart-total">${(item.price*item.qty).toLocaleString('pl-PL')} zł</div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeItemQty('${item.id}',-1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeItemQty('${item.id}',1)">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeItem('${item.id}')">Usuń</button>
+        </div>
+      </div>`).join('');
+    document.getElementById('submit-btn').disabled=false;document.getElementById('submit-btn').style.opacity='1';
+  }
+  const subtotal=getCartTotal();
+  const discountAmt=discountApplied?Math.round(subtotal*0.1):0;
+  document.getElementById('sum-subtotal').textContent=subtotal.toLocaleString('pl-PL')+' zł';
+  document.getElementById('sum-total').textContent=(subtotal-discountAmt).toLocaleString('pl-PL')+' zł';
+  if(discountApplied){document.getElementById('discount-row').style.display='flex';document.getElementById('discount-val').textContent='-'+discountAmt.toLocaleString('pl-PL')+' zł';}
+}
+function changeItemQty(id,delta){
+  const cart=getCart();const item=cart.find(i=>i.id===id);if(!item)return;
+  item.qty+=delta;if(item.qty<=0){removeFromCart(id);}else{saveCart(cart);}renderCart();
+}
+function removeItem(id){removeFromCart(id);renderCart();}
+function clearAll(){if(confirm('Czy na pewno chcesz wyczyścić koszyk?')){localStorage.removeItem('gardencraft_cart');updateCartBadge();renderCart();}}
+function applyPromo(){
+  if(document.getElementById('promo-code').value.trim().toUpperCase()==='OGROD10'){discountApplied=true;renderCart();showCartToast('Kod rabatowy -10% zastosowany!');}
+  else{alert('Nieprawidłowy kod. Spróbuj: OGROD10');}
+}
+function submitOrder(){
+  if(!document.getElementById('f-name').value.trim()||!document.getElementById('f-phone').value.trim()||!document.getElementById('f-email').value.trim()){alert('Wypełnij imię, telefon i e-mail.');return;}
+  if(getCart().length===0){alert('Koszyk jest pusty.');return;}
+  localStorage.removeItem('gardencraft_cart');updateCartBadge();
+  document.getElementById('success-overlay').classList.add('open');
+}
+renderCart();
+</script>
+</body>
+</html>

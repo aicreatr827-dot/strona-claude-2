@@ -1,0 +1,24 @@
+# Claude Code
+.claude/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Edytory
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node.js (na wypadek przyszłego użycia)
+node_modules/
+npm-debug.log*
+
+# Logi
+*.log

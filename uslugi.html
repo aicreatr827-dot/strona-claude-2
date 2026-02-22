@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Usługi ogrodnicze — GardenCraft</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+  .info-bar { background:var(--white); border-radius:0 0 16px 16px; margin:0 5vw; padding:1.2rem 2rem; display:flex; gap:2.5rem; flex-wrap:wrap; box-shadow:0 8px 32px rgba(45,74,45,0.1); margin-bottom:3rem; }
+  .info-bar-item { display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; color:var(--text-mid); font-family:var(--font-body); }
+  .service-highlight { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; padding:0 5vw 5rem; }
+  .sh-card { background:var(--white); border-radius:20px; overflow:hidden; box-shadow:0 8px 32px rgba(45,74,45,0.1); }
+  .sh-img { height:200px; overflow:hidden; }
+  .sh-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+  .sh-card:hover .sh-img img { transform:scale(1.06); }
+  .sh-body { padding:1.5rem; }
+  .sh-icon { font-size:2rem; margin-bottom:0.8rem; }
+  .sh-title { font-family:var(--font-heading); font-size:1.1rem; font-weight:900; color:var(--text-dark); margin-bottom:0.5rem; }
+  .sh-desc { font-size:0.85rem; color:var(--text-light); line-height:1.65; font-family:var(--font-body); }
+  .packages-section { padding:5rem 5vw; background:var(--white); }
+  .packages-header { text-align:center; margin-bottom:3.5rem; }
+  .packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .pkg-card { border-radius:24px; padding:2.5rem 2rem; border:1.5px solid rgba(45,74,45,0.12); position:relative; transition:all 0.3s; }
+  .pkg-card:hover { border-color:var(--green-mid); box-shadow:0 16px 48px rgba(45,74,45,0.12); transform:translateY(-4px); }
+  .pkg-card.featured { background:var(--green-deep); border-color:var(--green-deep); }
+  .pkg-popular { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--brown); color:var(--white); font-size:0.72rem; padding:0.3rem 1rem; border-radius:100px; font-weight:700; white-space:nowrap; font-family:var(--font-body); }
+  .pkg-name { font-family:var(--font-heading); font-size:1.3rem; font-weight:900; margin-bottom:0.3rem; color:var(--text-dark); }
+  .pkg-card.featured .pkg-name { color:var(--white); }
+  .pkg-subtitle { font-size:0.82rem; color:var(--text-light); margin-bottom:1.5rem; font-family:var(--font-body); }
+  .pkg-card.featured .pkg-subtitle { color:rgba(255,255,255,0.65); }
+  .pkg-price { font-family:var(--font-heading); font-size:2.5rem; font-weight:900; color:var(--green-deep); line-height:1; margin-bottom:0.3rem; }
+  .pkg-card.featured .pkg-price { color:var(--white); }
+  .pkg-period { font-size:0.78rem; color:var(--text-light); margin-bottom:2rem; font-family:var(--font-body); }
+  .pkg-card.featured .pkg-period { color:rgba(255,255,255,0.5); }
+  .pkg-features { list-style:none; margin-bottom:2rem; }
+  .pkg-features li { display:flex; align-items:flex-start; gap:0.6rem; font-size:0.88rem; color:var(--text-mid); margin-bottom:0.8rem; line-height:1.45; font-family:var(--font-body); }
+  .pkg-card.featured .pkg-features li { color:rgba(255,255,255,0.8); }
+  .pkg-features li::before { content:'✓'; color:var(--green-mid); font-weight:700; flex-shrink:0; }
+  .pkg-card.featured .pkg-features li::before { color:var(--green-pale); }
+  .pkg-btn { width:100%; text-align:center; justify-content:center; }
+  .pkg-card.featured .pkg-btn { background:var(--white); color:var(--green-deep); }
+  .pkg-card.featured .pkg-btn:hover { background:var(--green-pale); }
+  .individual-section { padding:5rem 5vw; }
+  .services-list { display:grid; gap:1.2rem; }
+  .svc-item { background:var(--white); border-radius:16px; padding:1.5rem 2rem; display:flex; align-items:center; gap:1.5rem; border:1px solid rgba(45,74,45,0.08); transition:all 0.25s; }
+  .svc-item:hover { box-shadow:0 8px 32px rgba(45,74,45,0.1); border-color:var(--green-pale); transform:translateX(4px); }
+  .svc-icon { font-size:2rem; width:56px; height:56px; background:var(--green-pale); border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .svc-content { flex:1; }
+  .svc-name { font-family:var(--font-heading); font-size:1rem; font-weight:900; color:var(--text-dark); margin-bottom:0.3rem; }
+  .svc-desc { font-size:0.85rem; color:var(--text-light); line-height:1.55; font-family:var(--font-body); }
+  .svc-right { display:flex; align-items:center; gap:1.5rem; flex-shrink:0; }
+  .svc-price-val { font-family:var(--font-heading); font-size:1.2rem; font-weight:900; color:var(--green-deep); }
+  .svc-price-unit { font-size:0.72rem; color:var(--text-light); font-family:var(--font-body); }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(20,40,20,0.6); backdrop-filter:blur(4px); z-index:500; align-items:center; justify-content:center; padding:2rem; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--white); border-radius:24px; max-width:540px; width:100%; max-height:90vh; overflow-y:auto; padding:2.5rem; position:relative; animation:modalIn 0.35s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes modalIn { from{transform:scale(0.88) translateY(20px);opacity:0;}to{transform:none;opacity:1;} }
+  .modal-close { position:absolute; top:1.2rem; right:1.2rem; background:var(--cream); border:none; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.1rem; }
+  .modal-name { font-family:var(--font-heading); font-size:1.5rem; font-weight:900; color:var(--text-dark); margin-bottom:0.5rem; }
+  .modal-price-big { font-family:var(--font-heading); font-size:1.6rem; color:var(--green-deep); font-weight:900; margin-bottom:1rem; }
+  .modal-desc { font-size:0.95rem; color:var(--text-mid); line-height:1.75; font-family:var(--font-body); margin-bottom:1.5rem; }
+  .freq-options { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .freq-label { font-size:0.85rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:0.7rem; font-family:var(--font-body); }
+  .freq-btn { padding:0.4rem 1rem; border-radius:100px; border:1.5px solid rgba(45,74,45,0.2); background:transparent; font-size:0.82rem; font-family:var(--font-body); font-weight:700; cursor:pointer; transition:all 0.2s; }
+  .freq-btn.selected,.freq-btn:hover { background:var(--green-deep); color:var(--white); border-color:var(--green-deep); }
+  .qty-row { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+  .qty-control { display:flex; align-items:center; border:1.5px solid rgba(45,74,45,0.2); border-radius:100px; overflow:hidden; }
+  .qty-btn { background:none; border:none; width:36px; height:36px; cursor:pointer; font-size:1.1rem; }
+  .qty-btn:hover { background:var(--cream); }
+  .qty-num { width:36px; text-align:center; font-size:0.95rem; font-weight:700; font-family:var(--font-body); }
+  @media(max-width:900px){ .service-highlight,.packages-grid{grid-template-columns:1fr;} .svc-item{flex-direction:column;align-items:flex-start;} .svc-right{width:100%;justify-content:space-between;} }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Garden<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="domki.html">Domki</a></li>
+    <li><a href="fotele.html">Meble</a></li>
+    <li><a href="uslugi.html" class="active">Usługi</a></li>
+    <li><a href="o-nas.html">O nas</a></li>
+  </ul>
+  <a href="koszyk.html" class="nav-cart">🛒 Koszyk <span class="cart-badge">0</span></a>
+</nav>
+
+<div class="page-hero">
+  <div style="padding:9rem 5vw 6rem;">
+    <div style="max-width:640px;">
+      <div class="page-hero-eyebrow">Oferta / Usługi ogrodnicze</div>
+      <h1 class="page-hero-title">Ogród<br/>przez <em>cały rok</em></h1>
+      <p class="page-hero-desc">Kompleksowa opieka nad Twoim ogrodem — od projektu i nasadzeń, przez regularne koszenie i strzyżenie, po zimowe zabezpieczanie roślin.</p>
+      <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+        <a href="#packages" class="btn-primary" style="background:var(--white);color:var(--green-deep);">Zobacz pakiety →</a>
+        <a href="#individual" class="btn-outline" style="border-color:rgba(255,255,255,0.4);color:var(--white);">Usługi jednorazowe</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="info-bar">
+  <div class="info-bar-item"><span>📅</span> Stały harmonogram</div>
+  <div class="info-bar-item"><span>🌱</span> Certyfikowani ogrodnicy</div>
+  <div class="info-bar-item"><span>🌍</span> Teren: Warszawa i okolice</div>
+  <div class="info-bar-item"><span>📞</span> Kontakt 7 dni w tygodniu</div>
+</div>
+
+<div class="service-highlight">
+  <div class="sh-card reveal">
+    <div class="sh-img"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop" alt="Pielęgnacja"/></div>
+    <div class="sh-body"><div class="sh-icon">✂️</div><div class="sh-title">Pielęgnacja & Strzyżenie</div><div class="sh-desc">Regularne koszenie trawnika, strzyżenie żywopłotów, grabienie i pielenie.</div></div>
+  </div>
+  <div class="sh-card reveal reveal-delay-1">
+    <div class="sh-img"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop" alt="Projektowanie"/></div>
+    <div class="sh-body"><div class="sh-icon">📐</div><div class="sh-title">Projektowanie ogrodów</div><div class="sh-desc">Kompleksowy projekt ogrodu od wizualizacji, przez dobór roślin, po realizację.</div></div>
+  </div>
+  <div class="sh-card reveal reveal-delay-2">
+    <div class="sh-img"><img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&auto=format&fit=crop" alt="Nawadnianie"/></div>
+    <div class="sh-body"><div class="sh-icon">💧</div><div class="sh-title">Nawadnianie & Automatyka</div><div class="sh-desc">Montaż systemów nawadniania automatycznego — rośliny zawsze podlane.</div></div>
+  </div>
+</div>
+
+<section class="packages-section" id="packages">
+  <div class="packages-header">
+    <div class="section-label reveal" style="justify-content:center;">Pakiety sezonowe</div>
+    <h2 class="section-title reveal reveal-delay-1">Wybierz swój <em>plan opieki</em></h2>
+  </div>
+  <div class="packages-grid">
+    <div class="pkg-card reveal">
+      <div class="pkg-name">Basic</div>
+      <div class="pkg-subtitle">Idealne dla małych ogrodów</div>
+      <div class="pkg-price">349 zł</div>
+      <div class="pkg-period">/ miesiąc</div>
+      <ul class="pkg-features">
+        <li>Koszenie trawnika 2× w miesiącu</li>
+        <li>Grabienie i wywóz skoszonej trawy</li>
+        <li>Nawożenie trawnika 1× sezon</li>
+        <li>Raport z wizyty + zdjęcia</li>
+      </ul>
+      <button class="btn-primary pkg-btn" onclick="addPackage('pkg-basic','Pakiet Basic',349)">Dodaj do koszyka →</button>
+    </div>
+    <div class="pkg-card featured reveal reveal-delay-1">
+      <div class="pkg-popular">Najpopularniejszy</div>
+      <div class="pkg-name">Standard</div>
+      <div class="pkg-subtitle">Dla typowych ogrodów 200–600m²</div>
+      <div class="pkg-price">649 zł</div>
+      <div class="pkg-period">/ miesiąc</div>
+      <ul class="pkg-features">
+        <li>Koszenie trawnika 4× w miesiącu</li>
+        <li>Strzyżenie żywopłotów 1× miesiąc</li>
+        <li>Pielenie rabat i krawędziowanie</li>
+        <li>Nawożenie 2× sezon</li>
+        <li>Opryski ochronne roślin</li>
+        <li>Raport + zdjęcia po każdej wizycie</li>
+      </ul>
+      <button class="btn-primary pkg-btn" onclick="addPackage('pkg-standard','Pakiet Standard',649)">Dodaj do koszyka →</button>
+    </div>
+    <div class="pkg-card reveal reveal-delay-2">
+      <div class="pkg-name">Premium</div>
+      <div class="pkg-subtitle">Pełna opieka, ogrody 600m²+</div>
+      <div class="pkg-price">1190 zł</div>
+      <div class="pkg-period">/ miesiąc</div>
+      <ul class="pkg-features">
+        <li>Koszenie bez limitu wizyt</li>
+        <li>Strzyżenie żywopłotów bez limitu</li>
+        <li>Pielenie i mulczowanie rabat</li>
+        <li>Sadzenie roślin sezonowych</li>
+        <li>Nawadnianie i regulatory</li>
+        <li>Zimowe zabezpieczanie roślin</li>
+        <li>Dedykowany ogrodnik</li>
+      </ul>
+      <button class="btn-primary pkg-btn" onclick="addPackage('pkg-premium','Pakiet Premium',1190)">Dodaj do koszyka →</button>
+    </div>
+  </div>
+</section>
+
+<section class="individual-section" id="individual">
+  <div>
+    <div class="section-label reveal">Usługi jednorazowe</div>
+    <h2 class="section-title reveal reveal-delay-1">Zamów konkretną <em>usługę</em></h2>
+  </div>
+  <div class="services-list" id="services-list"></div>
+</section>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="font-size:2.5rem;margin-bottom:1rem;" id="modal-icon"></div>
+    <div class="modal-name" id="modal-name"></div>
+    <div class="modal-price-big" id="modal-price"></div>
+    <div class="modal-desc" id="modal-desc"></div>
+    <div id="modal-freq-wrap">
+      <span class="freq-label">Częstotliwość:</span>
+      <div class="freq-options" id="modal-freq"></div>
+    </div>
+    <div class="qty-row">
+      <span style="font-size:0.85rem;color:var(--text-mid);font-weight:700;font-family:var(--font-body);">Ilość:</span>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <span class="qty-num" id="modal-qty">1</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:1rem;" onclick="addModalToCart()">Zarezerwuj usługę →</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="logo">Garden<span style="color:var(--green-light)">Craft</span></a><p>Tworzymy ogrody, domki i przestrzenie zewnętrzne z pasją do natury.</p></div>
+    <div class="footer-col"><h4>Oferta</h4><ul><li><a href="domki.html">Domki ogrodowe</a></li><li><a href="fotele.html">Meble ogrodowe</a></li><li><a href="uslugi.html">Usługi ogrodnicze</a></li></ul></div>
+    <div class="footer-col"><h4>Firma</h4><ul><li><a href="o-nas.html">O nas</a></li><li><a href="index.html#testimonials">Opinie</a></li></ul></div>
+    <div class="footer-col"><h4>Kontakt</h4><ul><li><a href="tel:+48123456789">+48 123 456 789</a></li><li><a href="mailto:kontakt@gardencraft.pl">kontakt@gardencraft.pl</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 GardenCraft.</span><span>Polityka prywatności</span></div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+const services=[
+  {id:'s1',name:'Koszenie trawnika',icon:'🌿',price:120,unit:'jednorazowo',desc:'Profesjonalne koszenie na żądaną wysokość, krawędziowanie i uprzątnięcie skoszonej trawy. Do 200m².',freqs:['Jednorazowo','2× w miesiącu','Co tydzień']},
+  {id:'s2',name:'Strzyżenie żywopłotu',icon:'✂️',price:180,unit:'jednorazowo',desc:'Ręczne i mechaniczne strzyżenie żywopłotów z zebraniem i wywozem odpadów. Cena do 20mb.',freqs:['Jednorazowo','Co 2 miesiące','Co miesiąc']},
+  {id:'s3',name:'Projekt ogrodu',icon:'📐',price:1500,unit:'projekt',desc:'Kompleksowy projekt ogrodu: inwentaryzacja, koncepcja, wizualizacja 3D, dobór roślin i harmonogram realizacji.',freqs:[]},
+  {id:'s4',name:'Sadzenie roślin',icon:'🌸',price:290,unit:'roboczogodzina',desc:'Profesjonalne sadzenie roślin ozdobnych, krzewów i drzew. Cena zawiera przygotowanie podłoża i podlewanie.',freqs:[]},
+  {id:'s5',name:'Pielenie rabat',icon:'🌱',price:95,unit:'roboczogodzina',desc:'Ręczne usuwanie chwastów z rabat kwiatowych i warzywnych, mulczowanie i profilaktyczne opryski.',freqs:['Jednorazowo','Co 2 tygodnie','Co tydzień']},
+  {id:'s6',name:'Montaż nawadniania',icon:'💧',price:2400,unit:'instalacja',desc:'Projekt i montaż automatycznego systemu nawadniania: zraszacze, mikrozraszacze lub kroplowanie. Do 200m².',freqs:[]},
+  {id:'s7',name:'Jesienne porządki',icon:'🍂',price:350,unit:'usługa',desc:'Grabienie liści, wywóz, przycięcie bylin, zabezpieczenie roślin przed zimą i przykrycie agrowłókniną.',freqs:[]},
+  {id:'s8',name:'Nawożenie profesjonalne',icon:'🌾',price:150,unit:'aplikacja',desc:'Dobór i aplikacja nawozów wolnodziałających lub granulowanych pod rodzaj roślin i stan gleby.',freqs:['Jednorazowo','2× w sezonie','Co miesiąc']},
+];
+let modalQty=1,currentService=null,selectedFreq='';
+function renderServices(){
+  document.getElementById('services-list').innerHTML=services.map(s=>`
+    <div class="svc-item reveal">
+      <div class="svc-icon">${s.icon}</div>
+      <div class="svc-content"><div class="svc-name">${s.name}</div><div class="svc-desc">${s.desc}</div></div>
+      <div class="svc-right">
+        <div><div class="svc-price-val">${s.price.toLocaleString('pl-PL')} zł</div><div class="svc-price-unit">${s.unit}</div></div>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn-outline" style="padding:0.5rem 1rem;font-size:0.82rem;" onclick="openModal('${s.id}')">Szczegóły</button>
+          <button class="add-to-cart-btn" onclick="quickAdd('${s.id}',this)">🛒 +</button>
+        </div>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el=>observer.observe(el));
+}
+function addPackage(id,name,price){addToCart({id,name,price,img:'',qty:1,category:'Pakiet ogrodniczy'});}
+function quickAdd(id,btn){
+  const s=services.find(x=>x.id===id);
+  addToCart({id:s.id,name:s.name,price:s.price,img:'',qty:1,category:'Usługa ogrodnicza'});
+  btn.classList.add('added');btn.textContent='✓';setTimeout(()=>{btn.classList.remove('added');btn.textContent='🛒 +';},2000);
+}
+function openModal(id){
+  currentService=services.find(s=>s.id===id);modalQty=1;selectedFreq=currentService.freqs[0]||'';
+  document.getElementById('modal-icon').textContent=currentService.icon;
+  document.getElementById('modal-name').textContent=currentService.name;
+  document.getElementById('modal-price').textContent=currentService.price.toLocaleString('pl-PL')+' zł / '+currentService.unit;
+  document.getElementById('modal-desc').textContent=currentService.desc;
+  document.getElementById('modal-qty').textContent=1;
+  const fw=document.getElementById('modal-freq-wrap');
+  if(currentService.freqs.length){fw.style.display='block';document.getElementById('modal-freq').innerHTML=currentService.freqs.map((f,i)=>`<button class="freq-btn ${i===0?'selected':''}" onclick="selectFreq(this,'${f}')">${f}</button>`).join('');}
+  else{fw.style.display='none';}
+  document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';
+}
+function selectFreq(btn,freq){selectedFreq=freq;document.querySelectorAll('.freq-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+function changeQty(d){modalQty=Math.max(1,modalQty+d);document.getElementById('modal-qty').textContent=modalQty;}
+function addModalToCart(){
+  const name=selectedFreq&&selectedFreq!=='Jednorazowo'?`${currentService.name} (${selectedFreq})`:currentService.name;
+  addToCart({id:currentService.id+(selectedFreq?'_'+selectedFreq:''),name,price:currentService.price,img:'',qty:modalQty,category:'Usługa ogrodnicza'});closeModal();
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+renderServices();
+</script>
+</body>
+</html>

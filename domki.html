@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Domki ogrodowe — GardenCraft</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+  .page-hero-inner { display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:4rem; }
+  .page-hero-imgs { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .page-hero-imgs img { width:100%; border-radius:14px; object-fit:cover; }
+  .page-hero-imgs img:first-child { grid-column:1/-1; height:200px; }
+  .page-hero-imgs img:not(:first-child) { height:150px; }
+  .info-bar { background:var(--white); border-radius:0 0 16px 16px; margin:0 5vw; padding:1.2rem 2rem; display:flex; gap:2.5rem; flex-wrap:wrap; box-shadow:0 8px 32px rgba(45,74,45,0.1); margin-bottom:3rem; }
+  .info-bar-item { display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; color:var(--text-mid); font-family:var(--font-body); }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(20,40,20,0.6); backdrop-filter:blur(4px); z-index:500; align-items:center; justify-content:center; padding:2rem; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--white); border-radius:24px; max-width:600px; width:100%; max-height:90vh; overflow-y:auto; padding:2.5rem; position:relative; animation:modalIn 0.35s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes modalIn { from{transform:scale(0.88) translateY(20px);opacity:0;}to{transform:none;opacity:1;} }
+  .modal-close { position:absolute; top:1.2rem; right:1.2rem; background:var(--cream); border:none; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.1rem; }
+  .modal-img { width:100%; height:280px; object-fit:cover; border-radius:16px; margin-bottom:1.5rem; }
+  .modal-name { font-family:var(--font-heading); font-size:1.6rem; font-weight:900; color:var(--text-dark); margin-bottom:0.5rem; }
+  .modal-price { font-family:var(--font-heading); font-size:1.4rem; color:var(--green-deep); font-weight:900; margin-bottom:1rem; }
+  .modal-desc { font-size:0.95rem; color:var(--text-mid); line-height:1.75; font-family:var(--font-body); margin-bottom:1.5rem; }
+  .modal-features { display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; margin-bottom:1.8rem; }
+  .modal-feature { display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:var(--text-mid); font-family:var(--font-body); }
+  .modal-feature::before { content:'✓'; color:var(--green-mid); font-weight:700; }
+  .qty-row { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+  .qty-control { display:flex; align-items:center; border:1.5px solid rgba(45,74,45,0.2); border-radius:100px; overflow:hidden; }
+  .qty-btn { background:none; border:none; width:36px; height:36px; cursor:pointer; font-size:1.1rem; font-family:var(--font-body); }
+  .qty-btn:hover { background:var(--cream); }
+  .qty-num { width:36px; text-align:center; font-size:0.95rem; font-weight:700; font-family:var(--font-body); }
+  @media(max-width:900px){ .page-hero-inner{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Garden<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="domki.html" class="active">Domki</a></li>
+    <li><a href="fotele.html">Meble</a></li>
+    <li><a href="uslugi.html">Usługi</a></li>
+    <li><a href="o-nas.html">O nas</a></li>
+  </ul>
+  <a href="koszyk.html" class="nav-cart">🛒 Koszyk <span class="cart-badge">0</span></a>
+</nav>
+
+<div class="page-hero">
+  <div style="padding:9rem 5vw 6rem;position:relative;z-index:1;">
+    <div class="page-hero-inner">
+      <div>
+        <div class="page-hero-eyebrow">Oferta / Domki ogrodowe</div>
+        <h1 class="page-hero-title">Domki,<br/>które <em>zachwycają</em></h1>
+        <p class="page-hero-desc">Drewniane domki letniskowe, altany, sauny i ogrody zimowe — każdy projekt tworzony z pasji do rzemiosła i naturalnych materiałów.</p>
+        <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="#products" class="btn-primary" style="background:var(--white);color:var(--green-deep);">Zobacz ofertę →</a>
+          <a href="koszyk.html" class="btn-outline" style="border-color:rgba(255,255,255,0.4);color:var(--white);">Twój koszyk 🛒</a>
+        </div>
+      </div>
+      <div class="page-hero-imgs">
+        <img src="https://images.unsplash.com/photo-1575393456344-0a5e37fd43f5?w=800&auto=format&fit=crop" alt="Domek ogrodowy"/>
+        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&auto=format&fit=crop" alt="Domek 2"/>
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6d351a74?w=400&auto=format&fit=crop" alt="Domek 3"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="info-bar">
+  <div class="info-bar-item"><span>🌲</span> Lite drewno skandynawskie</div>
+  <div class="info-bar-item"><span>🔨</span> Montaż w cenie</div>
+  <div class="info-bar-item"><span>📐</span> Projekt na zamówienie</div>
+  <div class="info-bar-item"><span>🛡️</span> Gwarancja 5 lat</div>
+</div>
+
+<section class="products-section" id="products">
+  <div class="products-filters">
+    <button class="filter-btn active" data-filter="all">Wszystkie</button>
+    <button class="filter-btn" data-filter="letniskowy">Letniskowe</button>
+    <button class="filter-btn" data-filter="sauna">Sauny</button>
+    <button class="filter-btn" data-filter="altana">Altany</button>
+    <button class="filter-btn" data-filter="zimowy">Ogrody zimowe</button>
+  </div>
+  <div class="products-grid" id="products-grid"></div>
+</section>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <img id="modal-img" src="" alt="" class="modal-img"/>
+    <div id="modal-badge" class="product-badge" style="position:static;display:inline-block;margin-bottom:0.8rem;"></div>
+    <div class="modal-name" id="modal-name"></div>
+    <div class="modal-price" id="modal-price"></div>
+    <div class="modal-desc" id="modal-desc"></div>
+    <div class="modal-features" id="modal-features"></div>
+    <div class="qty-row">
+      <span style="font-size:0.85rem;color:var(--text-mid);font-weight:700;font-family:var(--font-body);">Ilość:</span>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <span class="qty-num" id="modal-qty">1</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:1rem;" onclick="addModalToCart()">Dodaj do koszyka →</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="logo">Garden<span style="color:var(--green-light)">Craft</span></a><p>Tworzymy ogrody, domki i przestrzenie zewnętrzne z pasją do natury.</p></div>
+    <div class="footer-col"><h4>Oferta</h4><ul><li><a href="domki.html">Domki ogrodowe</a></li><li><a href="fotele.html">Meble ogrodowe</a></li><li><a href="uslugi.html">Usługi ogrodnicze</a></li></ul></div>
+    <div class="footer-col"><h4>Firma</h4><ul><li><a href="o-nas.html">O nas</a></li><li><a href="index.html#testimonials">Opinie</a></li></ul></div>
+    <div class="footer-col"><h4>Kontakt</h4><ul><li><a href="tel:+48123456789">+48 123 456 789</a></li><li><a href="mailto:kontakt@gardencraft.pl">kontakt@gardencraft.pl</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 GardenCraft.</span><span>Polityka prywatności</span></div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+const products = [
+  {id:'d1',name:'Domek Fjord 24m²',category:'letniskowy',price:28900,badge:'Bestseller',badgeClass:'popular',img:'https://images.unsplash.com/photo-1575393456344-0a5e37fd43f5?w=600&auto=format&fit=crop',desc:'Klasyczny domek letniskowy w stylu skandynawskim. Świetlista przestrzeń z dużymi oknami, taras na całej szerokości i solidna konstrukcja z drewna świerkowego klasy A.',tags:['24 m²','Taras 8m²','Drewno świerk'],features:['Lite drewno świerkowe','Okna 3-szybowe','Izolacja termiczna','Podłoga premium','Taras drewniany','Montaż w cenie']},
+  {id:'d2',name:'Sauna ogrodowa Lappi',category:'sauna',price:19500,badge:'Nowość',img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&auto=format&fit=crop',desc:'Tradycyjna fińska sauna ogrodowa z piecem na drewno. Pojemność 4-6 osób, zewnętrzna ławka wypoczynkowa i panoramiczne okno z widokiem na ogród.',tags:['4-6 osób','Piec drewno','12 m²'],features:['Piec fiński 8kW','Kamienie saunowe','Ławki z drewna abachi','Termometr i klepsydra','Oświetlenie LED','Parasol parowy']},
+  {id:'d3',name:'Altana Rustyk 16m²',category:'altana',price:12400,badge:'',img:'https://images.unsplash.com/photo-1600607687939-ce8a6d351a74?w=600&auto=format&fit=crop',desc:'Elegancka altana w stylu rustykalnym, idealna do letnich wieczorów. Dach z gontu, ozdobne belki i możliwość przeszklenia boków.',tags:['16 m²','Dach gont','Styl rustykalny'],features:['Dach z gontu bitumicznego','Ozdobne belki','Boki do przeszklenia','Barierki drewniane','Fundament wliczony','Impregnacja w cenie']},
+  {id:'d4',name:'Ogród Zimowy Crystal',category:'zimowy',price:44900,badge:'Premium',badgeClass:'popular',img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop',desc:'Luksusowy ogród zimowy z konstrukcją aluminiowo-szklaną. Panoramiczne przeszklenia do ziemi, dach ze szkła bezpiecznego i system ogrzewania podłogowego.',tags:['18 m²','Szkło bezpieczne','Ogrzewanie podł.'],features:['Aluminium klasy premium','Szkło bezpieczne VSG','Ogrzewanie podłogowe','Roletki zewnętrzne','Wentylacja mechaniczna','5 lat gwarancji']},
+  {id:'d5',name:'Domek Nordic 36m²',category:'letniskowy',price:52000,badge:'Duży',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop',desc:'Przestronny domek letniskowy z antresolą — idealne miejsce na wakacje dla całej rodziny. Pełna kuchnia, łazienka i sypialnia na antresoli.',tags:['36 m²','Antresola','Łazienka'],features:['Aneks kuchenny','Łazienka z prysznicem','Antresola sypialniana','Taras 12m²','Instalacja elektryczna','Kominek opcja']},
+  {id:'d6',name:'Sauna Barrel Duo',category:'sauna',price:8900,badge:'',img:'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&auto=format&fit=crop',desc:'Kompaktowa beczka saunowa dla 2 osób — gotowa do ustawienia w każdym ogrodzie. Drewno cedrowe, piec elektryczny i efektowny wygląd.',tags:['2 osoby','Cedr','Elektryczna'],features:['Drewno cedrowe','Piec elektryczny 4kW','Okno panoramiczne','Szybki montaż','Termostat','Oświetlenie LED']},
+];
+let modalQty=1,currentProduct=null;
+function renderProducts(filter='all'){
+  const grid=document.getElementById('products-grid');
+  const list=filter==='all'?products:products.filter(p=>p.category===filter);
+  grid.innerHTML=list.map(p=>`
+    <div class="product-card reveal">
+      <div class="product-img-wrap">
+        <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+        ${p.badge?`<div class="product-badge ${p.badgeClass||''}">${p.badge}</div>`:''}
+      </div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc.substring(0,100)}...</div>
+        <div class="product-meta">${p.tags.map(t=>`<span class="product-tag">${t}</span>`).join('')}</div>
+        <div class="product-footer">
+          <div class="product-price">${p.price.toLocaleString('pl-PL')} zł<span>cena netto</span></div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn-outline" style="padding:0.5rem 0.9rem;font-size:0.8rem;" onclick="openModal('${p.id}')">Szczegóły</button>
+            <button class="add-to-cart-btn" onclick="quickAdd('${p.id}',this)">🛒 +</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el=>observer.observe(el));
+}
+function quickAdd(id,btn){
+  const p=products.find(x=>x.id===id);
+  addToCart({id:p.id,name:p.name,price:p.price,img:p.img,qty:1,category:'Domek ogrodowy'});
+  btn.classList.add('added');btn.textContent='✓';
+  setTimeout(()=>{btn.classList.remove('added');btn.textContent='🛒 +';},2000);
+}
+function openModal(id){
+  currentProduct=products.find(p=>p.id===id);modalQty=1;
+  document.getElementById('modal-img').src=currentProduct.img;
+  document.getElementById('modal-name').textContent=currentProduct.name;
+  document.getElementById('modal-price').textContent=currentProduct.price.toLocaleString('pl-PL')+' zł';
+  document.getElementById('modal-desc').textContent=currentProduct.desc;
+  document.getElementById('modal-qty').textContent=1;
+  const badge=document.getElementById('modal-badge');
+  badge.textContent=currentProduct.badge;badge.style.display=currentProduct.badge?'inline-block':'none';
+  document.getElementById('modal-features').innerHTML=currentProduct.features.map(f=>`<div class="modal-feature">${f}</div>`).join('');
+  document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+function changeQty(d){modalQty=Math.max(1,modalQty+d);document.getElementById('modal-qty').textContent=modalQty;}
+function addModalToCart(){addToCart({id:currentProduct.id,name:currentProduct.name,price:currentProduct.price,img:currentProduct.img,qty:modalQty,category:'Domek ogrodowy'});closeModal();}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderProducts(btn.dataset.filter);
+}));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.1});
+renderProducts();
+</script>
+</body>
+</html>

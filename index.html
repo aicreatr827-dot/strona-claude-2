@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GardenCraft — Domki, Meble & Ogrody</title>
+<link rel="stylesheet" href="shared.css" />
+<style>
+  #hero { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:8rem 5vw 4rem; gap:4rem; position:relative; overflow:hidden; }
+  .hero-bg { position:absolute; width:600px; height:600px; background:radial-gradient(circle,rgba(123,171,110,0.12) 0%,transparent 70%); border-radius:50%; top:10%; right:-10%; pointer-events:none; }
+  .hero-eyebrow { display:inline-flex; align-items:center; gap:0.5rem; font-size:0.75rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--green-mid); margin-bottom:1.5rem; font-family:var(--font-body); }
+  .hero-eyebrow::before { content:''; display:block; width:28px; height:2px; background:var(--green-light); border-radius:2px; }
+  .hero-title { font-family:var(--font-heading); font-size:clamp(2.8rem,5vw,4.8rem); font-weight:900; line-height:1.1; color:var(--text-dark); margin-bottom:1.5rem; }
+  .hero-title em { font-style:italic; color:var(--green-mid); }
+  .hero-desc { font-size:1rem; color:var(--text-mid); line-height:1.75; max-width:440px; margin-bottom:2.5rem; font-family:var(--font-body); }
+  .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }
+  .btn-secondary { display:inline-flex; align-items:center; gap:0.5rem; color:var(--green-deep); font-size:0.95rem; font-weight:700; text-decoration:none; border-bottom:1.5px solid var(--green-pale); padding-bottom:2px; font-family:var(--font-body); transition:border-color 0.2s; }
+  .btn-secondary:hover { border-color:var(--green-deep); }
+  .hero-images { position:relative; height:580px; }
+  .hero-img-main { position:absolute; top:0; right:0; width:80%; height:80%; border-radius:24px; overflow:hidden; box-shadow:0 32px 80px rgba(45,74,45,0.18); }
+  .hero-img-main img { width:100%; height:100%; object-fit:cover; }
+  .hero-img-small { position:absolute; bottom:0; left:0; width:50%; height:55%; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(45,74,45,0.15); border:6px solid var(--cream); }
+  .hero-img-small img { width:100%; height:100%; object-fit:cover; }
+  .hero-badge { position:absolute; top:50%; left:-20px; transform:translateY(-50%); background:var(--white); border-radius:16px; padding:1rem 1.2rem; box-shadow:0 12px 40px rgba(0,0,0,0.1); text-align:center; min-width:110px; }
+  .hero-badge-num { font-family:var(--font-heading); font-size:2rem; font-weight:900; color:var(--green-deep); line-height:1; }
+  .hero-badge-label { font-size:0.72rem; color:var(--text-light); margin-top:0.25rem; font-family:var(--font-body); }
+
+  #home-services { padding:6rem 5vw; }
+  .home-services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:3rem; }
+  .home-service-card { border-radius:20px; overflow:hidden; position:relative; text-decoration:none; display:block; box-shadow:0 8px 32px rgba(45,74,45,0.1); transition:all 0.35s; height:380px; }
+  .home-service-card img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+  .home-service-card:hover img { transform:scale(1.06); }
+  .home-service-card:hover { transform:translateY(-6px); box-shadow:0 20px 60px rgba(45,74,45,0.2); }
+  .home-service-overlay { position:absolute; inset:0; background:linear-gradient(transparent 30%,rgba(20,40,20,0.88)); display:flex; flex-direction:column; justify-content:flex-end; padding:2rem; }
+  .hs-icon { font-size:2rem; margin-bottom:0.8rem; }
+  .hs-title { font-family:var(--font-heading); font-size:1.3rem; font-weight:900; color:var(--white); margin-bottom:0.5rem; }
+  .hs-desc { font-size:0.85rem; color:rgba(255,255,255,0.7); line-height:1.6; margin-bottom:1rem; font-family:var(--font-body); }
+  .hs-link { display:inline-flex; align-items:center; gap:0.4rem; color:var(--green-pale); font-size:0.85rem; font-weight:700; font-family:var(--font-body); }
+
+  #about { padding:6rem 5vw; display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center; background:var(--white); }
+  .about-images { position:relative; height:480px; }
+  .about-img-main { position:absolute; top:0; left:0; width:72%; height:85%; border-radius:20px; overflow:hidden; box-shadow:0 24px 64px rgba(45,74,45,0.15); }
+  .about-img-main img { width:100%; height:100%; object-fit:cover; }
+  .about-img-accent { position:absolute; bottom:0; right:0; width:52%; height:54%; border-radius:16px; overflow:hidden; border:6px solid var(--white); box-shadow:0 16px 48px rgba(45,74,45,0.12); }
+  .about-img-accent img { width:100%; height:100%; object-fit:cover; }
+  .about-pill { position:absolute; top:38%; right:-14px; background:var(--green-deep); color:var(--white); padding:0.7rem 1.1rem; border-radius:100px; font-size:0.78rem; font-weight:700; letter-spacing:0.05em; white-space:nowrap; box-shadow:0 8px 24px rgba(45,74,45,0.3); font-family:var(--font-body); }
+  .features-list { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2.5rem; }
+  .feature-item { display:flex; align-items:flex-start; gap:0.7rem; }
+  .feature-icon { width:32px; height:32px; border-radius:8px; background:var(--green-pale); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0; }
+  .feature-text { font-size:0.88rem; color:var(--text-mid); line-height:1.5; font-family:var(--font-body); }
+  .feature-text strong { display:block; color:var(--text-dark); font-weight:700; margin-bottom:0.1rem; }
+  .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-bottom:2.5rem; }
+  .stat-card { background:var(--cream); border-radius:16px; padding:1.4rem; text-align:center; }
+  .stat-num { font-family:var(--font-heading); font-size:2rem; font-weight:900; color:var(--green-deep); line-height:1; }
+  .stat-label { font-size:0.75rem; color:var(--text-light); margin-top:0.3rem; font-family:var(--font-body); }
+
+  #testimonials { padding:6rem 5vw; }
+  .testimonials-header { text-align:center; margin-bottom:3.5rem; }
+  .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .testimonial-card { background:var(--white); border-radius:20px; padding:2rem; border:1px solid rgba(45,74,45,0.08); transition:transform 0.3s,box-shadow 0.3s; }
+  .testimonial-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(45,74,45,0.1); }
+  .testimonial-stars { color:var(--green-mid); font-size:0.9rem; margin-bottom:1rem; }
+  .testimonial-text { font-size:0.92rem; color:var(--text-mid); line-height:1.75; margin-bottom:1.5rem; font-style:italic; font-family:var(--font-body); }
+  .testimonial-author { display:flex; align-items:center; gap:0.8rem; }
+  .testimonial-avatar { width:42px; height:42px; border-radius:50%; background:var(--green-pale); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+  .testimonial-name { font-weight:700; font-size:0.9rem; color:var(--text-dark); font-family:var(--font-body); }
+  .testimonial-loc { font-size:0.78rem; color:var(--text-light); margin-top:0.1rem; font-family:var(--font-body); }
+
+  #cta { padding:5rem 5vw; background:var(--green-deep); text-align:center; position:relative; overflow:hidden; }
+  #cta::before { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:400px; background:radial-gradient(ellipse,rgba(123,171,110,0.2) 0%,transparent 70%); pointer-events:none; }
+  .cta-title { font-family:var(--font-heading); font-size:clamp(1.8rem,4vw,3rem); font-weight:900; color:var(--white); line-height:1.15; margin-bottom:1.2rem; position:relative; }
+  .cta-title em { font-style:italic; color:var(--green-pale); }
+  .cta-desc { font-size:1rem; color:rgba(255,255,255,0.65); max-width:460px; margin:0 auto 2.5rem; line-height:1.75; font-family:var(--font-body); position:relative; }
+  .btn-white { display:inline-flex; align-items:center; gap:0.5rem; background:var(--white); color:var(--green-deep); padding:0.9rem 2rem; border-radius:100px; font-size:0.95rem; font-weight:700; text-decoration:none; position:relative; transition:all 0.25s; box-shadow:0 8px 32px rgba(0,0,0,0.2); font-family:var(--font-body); }
+  .btn-white:hover { background:var(--green-pale); transform:translateY(-2px); }
+
+  @media(max-width:900px){
+    #hero,#about{grid-template-columns:1fr;}
+    .hero-images{height:360px;}
+    .about-images{height:320px;}
+    .home-services-grid,.testimonials-grid{grid-template-columns:1fr;}
+    .hero-badge{left:auto;right:10px;top:10px;transform:none;}
+    .features-list{grid-template-columns:1fr;}
+    .stats-row{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Garden<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="domki.html">Domki</a></li>
+    <li><a href="fotele.html">Meble</a></li>
+    <li><a href="uslugi.html">Usługi</a></li>
+    <li><a href="o-nas.html">O nas</a></li>
+  </ul>
+  <a href="koszyk.html" class="nav-cart">🛒 Koszyk <span class="cart-badge">0</span></a>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div>
+    <div class="hero-eyebrow">Ogrodnictwo & Design</div>
+    <h1 class="hero-title">Twój ogród,<br/><em>twoje królestwo</em></h1>
+    <p class="hero-desc">Tworzymy wyjątkowe domki ogrodowe, dobieramy meble na miarę i zamieniamy każdy ogród w przestrzeń, gdzie chce się spędzać czas.</p>
+    <div class="hero-btns">
+      <a href="domki.html" class="btn-primary">Przeglądaj ofertę →</a>
+      <a href="o-nas.html" class="btn-secondary">Poznaj nas ↓</a>
+    </div>
+  </div>
+  <div class="hero-images">
+    <div class="hero-img-main"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop" alt="Ogród"/></div>
+    <div class="hero-img-small"><img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400&auto=format&fit=crop" alt="Fotel ogrodowy"/></div>
+    <div class="hero-badge"><div class="hero-badge-num">120+</div><div class="hero-badge-label">Realizacji</div></div>
+  </div>
+</section>
+
+<div class="marquee-wrap"><div class="marquee-track">
+  <div class="marquee-item"><span class="marquee-dot"></span>Domki ogrodowe</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Fotele i meble</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Projektowanie ogrodów</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Pielęgnacja zieleni</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Ogrody zimowe</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Tarasy drewniane</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Domki ogrodowe</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Fotele i meble</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Projektowanie ogrodów</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Pielęgnacja zieleni</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Ogrody zimowe</div>
+  <div class="marquee-item"><span class="marquee-dot"></span>Tarasy drewniane</div>
+</div></div>
+
+<section id="home-services">
+  <div style="text-align:center;">
+    <div class="section-label reveal" style="justify-content:center;">Co oferujemy</div>
+    <h2 class="section-title reveal reveal-delay-1">Trzy obszary,<br/><em>jeden ogród</em></h2>
+  </div>
+  <div class="home-services-grid">
+    <a href="domki.html" class="home-service-card reveal reveal-delay-1">
+      <img src="https://images.unsplash.com/photo-1575393456344-0a5e37fd43f5?w=600&auto=format&fit=crop" alt="Domki ogrodowe"/>
+      <div class="home-service-overlay"><div class="hs-icon">🏡</div><div class="hs-title">Domki ogrodowe</div><div class="hs-desc">Drewniane domki letniskowe, altany, sauny — każdy na zamówienie.</div><div class="hs-link">Zobacz ofertę →</div></div>
+    </a>
+    <a href="fotele.html" class="home-service-card reveal reveal-delay-2">
+      <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&auto=format&fit=crop" alt="Meble ogrodowe"/>
+      <div class="home-service-overlay"><div class="hs-icon">🪑</div><div class="hs-title">Fotele & Meble</div><div class="hs-desc">Komfortowe fotele, stoły i zestawy wypoczynkowe do każdego ogrodu.</div><div class="hs-link">Zobacz ofertę →</div></div>
+    </a>
+    <a href="uslugi.html" class="home-service-card reveal reveal-delay-3">
+      <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop" alt="Usługi ogrodnicze"/>
+      <div class="home-service-overlay"><div class="hs-icon">🌿</div><div class="hs-title">Usługi ogrodnicze</div><div class="hs-desc">Projektowanie, pielęgnacja i serwis zieleni przez cały rok.</div><div class="hs-link">Zobacz usługi →</div></div>
+    </a>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-images reveal">
+    <div class="about-img-main"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&auto=format&fit=crop" alt="Ogród"/></div>
+    <div class="about-img-accent"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&auto=format&fit=crop" alt="Detal"/></div>
+    <div class="about-pill">🌿 Naturalne materiały</div>
+  </div>
+  <div class="reveal reveal-delay-1">
+    <div class="section-label">O nas</div>
+    <h2 class="section-title">Pasja do natury,<br/><em>precyzja wykonania</em></h2>
+    <p class="section-body" style="margin-bottom:2rem;">Tworzymy przestrzenie ogrodowe z miłości do natury i rzemiosła. Każdy projekt to indywidualne podejście — od wyboru domku, przez meble, aż po ostatni krzew w ogrodzie.</p>
+    <div class="features-list">
+      <div class="feature-item"><div class="feature-icon">🏡</div><div class="feature-text"><strong>Domki na zamówienie</strong>Projekt dopasowany do działki</div></div>
+      <div class="feature-item"><div class="feature-icon">🪑</div><div class="feature-text"><strong>Meble ogrodowe</strong>Trwałe fotele, stoły, leżaki</div></div>
+      <div class="feature-item"><div class="feature-icon">✂️</div><div class="feature-text"><strong>Pielęgnacja ogrodu</strong>Serwis zieleni przez cały rok</div></div>
+      <div class="feature-item"><div class="feature-icon">🌻</div><div class="feature-text"><strong>Naturalne materiały</strong>Drewno, kamień, rośliny</div></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">120+</div><div class="stat-label">Projektów</div></div>
+      <div class="stat-card"><div class="stat-num">12+</div><div class="stat-label">Lat doświadczenia</div></div>
+      <div class="stat-card"><div class="stat-num">97%</div><div class="stat-label">Zadowolonych klientów</div></div>
+    </div>
+    <a href="o-nas.html" class="btn-primary">Więcej o nas →</a>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="testimonials-header">
+    <div class="section-label reveal" style="justify-content:center;">Opinie</div>
+    <h2 class="section-title reveal reveal-delay-1">Co mówią<br/><em>nasi klienci</em></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Domek ogrodowy przeszedł nasze oczekiwania. Drewno najwyższej jakości, precyzyjne wykonanie i terminowość — polecam z czystym sumieniem."</p>
+      <div class="testimonial-author"><div class="testimonial-avatar">👩</div><div><div class="testimonial-name">Anna Kowalska</div><div class="testimonial-loc">Warszawa, Ursynów</div></div></div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Fotele i stolik ogrodowy wyglądają rewelacyjnie. Ekipa pomogła dobrać zestaw pasujący do tarasu, szybka dostawa i profesjonalny montaż."</p>
+      <div class="testimonial-author"><div class="testimonial-avatar">👨</div><div><div class="testimonial-name">Marek Wiśniewski</div><div class="testimonial-loc">Józefów, Mazowieckie</div></div></div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-3">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Pielęgnacja ogrodu przez cały sezon — zawsze punktualnie, ogród wygląda jak z katalogu. Nie wyobrażam sobie teraz innej firmy."</p>
+      <div class="testimonial-author"><div class="testimonial-avatar">👩</div><div><div class="testimonial-name">Katarzyna Nowak</div><div class="testimonial-loc">Konstancin-Jeziorna</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <h2 class="cta-title reveal">Gotowy na wymarzony<br/><em>ogród?</em></h2>
+  <p class="cta-desc reveal reveal-delay-1">Bezpłatna konsultacja i wycena bez zobowiązań. Zamienimy Twój ogród w miejsce, do którego nie będziesz chciał wracać do domu.</p>
+  <a href="mailto:kontakt@gardencraft.pl" class="btn-white reveal reveal-delay-2">Napisz do nas →</a>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="logo">Garden<span style="color:var(--green-light)">Craft</span></a><p>Tworzymy ogrody, domki i przestrzenie zewnętrzne z pasją do natury i precyzją rzemiosła.</p></div>
+    <div class="footer-col"><h4>Oferta</h4><ul><li><a href="domki.html">Domki ogrodowe</a></li><li><a href="fotele.html">Meble ogrodowe</a></li><li><a href="uslugi.html">Usługi ogrodnicze</a></li><li><a href="koszyk.html">Koszyk</a></li></ul></div>
+    <div class="footer-col"><h4>Firma</h4><ul><li><a href="o-nas.html">O nas</a></li><li><a href="o-nas.html">Zespół</a></li><li><a href="#testimonials">Opinie</a></li></ul></div>
+    <div class="footer-col"><h4>Kontakt</h4><ul><li><a href="tel:+48123456789">+48 123 456 789</a></li><li><a href="mailto:kontakt@gardencraft.pl">kontakt@gardencraft.pl</a></li><li><a href="#">Instagram</a></li><li><a href="#">Facebook</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 GardenCraft.</span><span>Polityka prywatności</span></div>
+</footer>
+<script src="shared.js"></script>
+<script>
+  const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
