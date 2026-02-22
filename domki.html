@@ -136,15 +136,12 @@ function renderProducts(filter='all'){
         ${p.badge?`<div class="product-badge ${p.badgeClass||''}">${p.badge}</div>`:''}
       </div>
       <div class="product-body">
-        <div class="product-name">${p.name}</div>
+        <a class="product-name" href="produkt.html?id=${p.id}">${p.name}</a>
         <div class="product-desc">${p.desc.substring(0,100)}...</div>
         <div class="product-meta">${p.tags.map(t=>`<span class="product-tag">${t}</span>`).join('')}</div>
         <div class="product-footer">
           <div class="product-price">${p.price.toLocaleString('pl-PL')} zł<span>cena netto</span></div>
-          <div style="display:flex;gap:0.5rem;">
-            <a class="btn-outline" href="produkt.html?id=${p.id}" style="padding:0 var(--space-2);height:40px;font-size:var(--text-small);">Szczegóły</a>
-            <button class="add-to-cart-btn" onclick="quickAdd('${p.id}',this)">🛒 +</button>
-          </div>
+          <button class="add-to-cart-btn" onclick="quickAdd('${p.id}',this)">🛒 Dodaj do koszyka</button>
         </div>
       </div>
     </div>`).join('');

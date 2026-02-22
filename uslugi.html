@@ -46,10 +46,11 @@
   .svc-item:hover { box-shadow:0 8px 32px rgba(45,74,45,0.1); border-color:var(--green-pale); transform:translateX(4px); }
   .svc-icon { font-size:2rem; width:56px; height:56px; background:var(--green-pale); border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .svc-content { flex:1; }
-  .svc-name { font-family:var(--font-heading); font-size:1rem; font-weight:900; color:var(--text-dark); margin-bottom:0.3rem; }
+  .svc-name { font-family:var(--font-heading); font-size:1rem; font-weight:900; color:var(--text-dark); margin-bottom:0.3rem; text-decoration:none; display:block; }
+  .svc-name:hover { color:var(--green-deep); }
   .svc-desc { font-size:0.85rem; color:var(--text-light); line-height:1.55; font-family:var(--font-body); }
-  .svc-right { display:flex; align-items:center; gap:1.5rem; flex-shrink:0; }
-  .svc-price-val { font-family:var(--font-heading); font-size:1.2rem; font-weight:900; color:var(--green-deep); }
+  .svc-right { display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem; flex-shrink:0; }
+  .svc-price-val { font-family:var(--font-body); font-size:1.5rem; font-weight:700; color:var(--green-deep); }
   .svc-price-unit { font-size:0.72rem; color:var(--text-light); font-family:var(--font-body); }
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(20,40,20,0.6); backdrop-filter:blur(4px); z-index:500; align-items:center; justify-content:center; padding:2rem; }
   .modal-overlay.open { display:flex; }
@@ -231,13 +232,10 @@ function renderServices(){
   document.getElementById('services-list').innerHTML=services.map(s=>`
     <div class="svc-item reveal">
       <div class="svc-icon">${s.icon}</div>
-      <div class="svc-content"><div class="svc-name">${s.name}</div><div class="svc-desc">${s.desc}</div></div>
+      <div class="svc-content"><a class="svc-name" href="produkt.html?id=${s.id}">${s.name}</a><div class="svc-desc">${s.desc}</div></div>
       <div class="svc-right">
         <div><div class="svc-price-val">${s.price.toLocaleString('pl-PL')} zł</div><div class="svc-price-unit">${s.unit}</div></div>
-        <div style="display:flex;gap:0.5rem;">
-          <a class="btn-outline" href="produkt.html?id=${s.id}" style="padding:0 var(--space-2);height:40px;font-size:var(--text-small);">Szczegóły</a>
-          <button class="add-to-cart-btn" onclick="quickAdd('${s.id}',this)">🛒 +</button>
-        </div>
+        <button class="add-to-cart-btn" onclick="quickAdd('${s.id}',this)">🛒 Dodaj do koszyka</button>
       </div>
     </div>`).join('');
   document.querySelectorAll('.reveal:not(.visible)').forEach(el=>observer.observe(el));
