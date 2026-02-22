@@ -193,8 +193,6 @@ renderProducts();
 document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProducts(btn.dataset.filter);
 }));
-const _openParam=new URLSearchParams(location.search).get('open');
-if(_openParam) setTimeout(()=>openModal(_openParam.split('_')[0]),400);
 </script>
 </body>
 </html>

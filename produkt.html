@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Produkt — GardenCraft</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+  .product-page { padding:8rem 5vw 5rem; min-height:80vh; }
+  .product-layout { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; max-width:1200px; }
+  .product-img-wrap { border-radius:24px; overflow:hidden; box-shadow:0 24px 64px rgba(45,74,45,0.15); aspect-ratio:4/3; }
+  .product-img-wrap img { width:100%; height:100%; object-fit:cover; }
+  .product-img-placeholder { width:100%; height:100%; background:var(--cream); display:flex; align-items:center; justify-content:center; font-size:5rem; aspect-ratio:4/3; border-radius:24px; }
+  .product-badge { display:inline-block; padding:0.3rem 0.8rem; border-radius:100px; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--green-pale); color:var(--green-deep); margin-bottom:1rem; font-family:var(--font-body); }
+  .product-badge.popular { background:var(--green-mid); color:var(--white); }
+  .product-category { font-size:0.75rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--green-mid); margin-bottom:0.8rem; font-family:var(--font-body); }
+  .product-name { font-family:var(--font-heading); font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:900; color:var(--text-dark); line-height:1.15; margin-bottom:1rem; }
+  .product-price { font-family:var(--font-heading); font-size:2rem; font-weight:900; color:var(--green-deep); margin-bottom:1.5rem; }
+  .product-unit { font-size:0.85rem; color:var(--text-light); font-family:var(--font-body); font-weight:400; }
+  .product-desc { font-size:0.95rem; color:var(--text-mid); line-height:1.8; margin-bottom:2rem; font-family:var(--font-body); }
+  .product-tags { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:2rem; }
+  .product-tag { display:inline-flex; align-items:center; gap:0.35rem; background:var(--cream); border-radius:100px; padding:0.35rem 0.9rem; font-size:0.78rem; color:var(--text-mid); font-family:var(--font-body); font-weight:600; }
+  .product-tag::before { content:'✓'; color:var(--green-mid); font-weight:900; }
+  .features-title { font-size:0.78rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-light); margin-bottom:1rem; font-family:var(--font-body); }
+  .features-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:2rem; }
+  .feature-chip { display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:var(--text-mid); font-family:var(--font-body); }
+  .feature-chip::before { content:''; width:6px; height:6px; background:var(--green-mid); border-radius:50%; flex-shrink:0; }
+  .colors-wrap { margin-bottom:2rem; }
+  .colors-label { font-size:0.78rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-light); margin-bottom:0.8rem; font-family:var(--font-body); }
+  .color-dots { display:flex; gap:0.6rem; flex-wrap:wrap; }
+  .color-dot { width:28px; height:28px; border-radius:50%; border:2.5px solid transparent; cursor:pointer; transition:border-color 0.2s; title:attr(title); }
+  .color-dot:hover, .color-dot.selected { border-color:var(--green-deep); }
+  .freqs-wrap { margin-bottom:2rem; }
+  .freqs-label { font-size:0.78rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-light); margin-bottom:0.8rem; font-family:var(--font-body); }
+  .freq-options { display:flex; flex-wrap:wrap; gap:0.5rem; }
+  .freq-btn { padding:0.4rem 0.9rem; border-radius:100px; border:1.5px solid rgba(45,74,45,0.2); background:var(--white); font-size:0.82rem; font-family:var(--font-body); cursor:pointer; color:var(--text-mid); transition:all 0.2s; }
+  .freq-btn.selected { background:var(--green-deep); color:var(--white); border-color:var(--green-deep); }
+  .qty-row { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+  .qty-label { font-size:0.78rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-light); font-family:var(--font-body); }
+  .qty-control { display:flex; align-items:center; background:var(--cream); border-radius:100px; overflow:hidden; }
+  .qty-btn { background:none; border:none; width:36px; height:36px; cursor:pointer; font-size:1.1rem; font-family:var(--font-body); }
+  .qty-btn:hover { background:var(--green-pale); }
+  .qty-num { width:36px; text-align:center; font-size:0.95rem; font-weight:700; font-family:var(--font-body); }
+  .action-row { display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }
+  .back-link { display:inline-flex; align-items:center; gap:0.4rem; color:var(--text-light); font-size:0.85rem; text-decoration:none; font-family:var(--font-body); margin-bottom:2.5rem; transition:color 0.2s; }
+  .back-link:hover { color:var(--green-deep); }
+  .not-found { text-align:center; padding:5rem 2rem; }
+  .not-found-icon { font-size:4rem; margin-bottom:1.5rem; }
+  .not-found-title { font-family:var(--font-heading); font-size:1.8rem; font-weight:900; color:var(--text-dark); margin-bottom:0.8rem; }
+  .not-found-desc { color:var(--text-light); font-size:0.95rem; margin-bottom:2rem; font-family:var(--font-body); }
+  @media(max-width:900px){ .product-layout{grid-template-columns:1fr;gap:2.5rem;} .features-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Garden<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="domki.html">Domki</a></li>
+    <li><a href="fotele.html">Meble</a></li>
+    <li><a href="uslugi.html">Usługi</a></li>
+    <li><a href="o-nas.html">O nas</a></li>
+  </ul>
+  <a href="koszyk.html" class="nav-cart">🛒 Koszyk <span class="cart-badge">0</span></a>
+</nav>
+
+<div class="product-page">
+  <div id="product-content"></div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="index.html" class="logo">Garden<span style="color:var(--green-light)">Craft</span></a><p>Tworzymy ogrody, domki i przestrzenie zewnętrzne z pasją do natury i precyzją rzemiosła.</p></div>
+    <div class="footer-col"><h4>Oferta</h4><ul><li><a href="domki.html">Domki ogrodowe</a></li><li><a href="fotele.html">Meble ogrodowe</a></li><li><a href="uslugi.html">Usługi ogrodnicze</a></li></ul></div>
+    <div class="footer-col"><h4>Firma</h4><ul><li><a href="o-nas.html">O nas</a></li><li><a href="index.html#testimonials">Opinie</a></li></ul></div>
+    <div class="footer-col"><h4>Kontakt</h4><ul><li><a href="tel:+48123456789">+48 123 456 789</a></li><li><a href="mailto:kontakt@gardencraft.pl">kontakt@gardencraft.pl</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 GardenCraft.</span><span>Polityka prywatności</span></div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+// ── Wszystkie dane produktów ──────────────────────────────────────
+const allProducts = [
+  {id:'d1',name:'Domek Fjord 24m²',type:'domek',backUrl:'domki.html',backLabel:'Domki ogrodowe',category:'Domek letniskowy',price:28900,badge:'Bestseller',badgeClass:'popular',img:'https://images.unsplash.com/photo-1448630360428-65456885c650?w=800&auto=format&fit=crop',desc:'Klasyczny domek letniskowy w stylu skandynawskim. Świetlista przestrzeń z dużymi oknami, taras na całej szerokości i solidna konstrukcja z drewna świerkowego klasy A.',tags:['24 m²','Taras 8m²','Drewno świerk'],features:['Lite drewno świerkowe','Okna 3-szybowe','Izolacja termiczna','Podłoga premium','Taras drewniany','Montaż w cenie'],colors:[]},
+  {id:'d2',name:'Sauna ogrodowa Lappi',type:'domek',backUrl:'domki.html',backLabel:'Domki ogrodowe',category:'Sauna',price:19500,badge:'Nowość',img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&auto=format&fit=crop',desc:'Tradycyjna fińska sauna ogrodowa z piecem na drewno. Pojemność 4-6 osób, zewnętrzna ławka wypoczynkowa i panoramiczne okno z widokiem na ogród.',tags:['4-6 osób','Piec drewno','12 m²'],features:['Piec fiński 8kW','Kamienie saunowe','Ławki z drewna abachi','Termometr i klepsydra','Oświetlenie LED','Parasol parowy'],colors:[]},
+  {id:'d3',name:'Altana Rustyk 16m²',type:'domek',backUrl:'domki.html',backLabel:'Domki ogrodowe',category:'Altana',price:12400,badge:'',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&auto=format&fit=crop',desc:'Elegancka altana w stylu rustykalnym, idealna do letnich wieczorów. Dach z gontu, ozdobne belki i możliwość przeszklenia boków.',tags:['16 m²','Dach gont','Styl rustykalny'],features:['Dach z gontu bitumicznego','Ozdobne belki','Boki do przeszklenia','Barierki drewniane','Fundament wliczony','Impregnacja w cenie'],colors:[]},
+  {id:'d4',name:'Ogród Zimowy Crystal',type:'domek',backUrl:'domki.html',backLabel:'Domki ogrodowe',category:'Ogród zimowy',price:44900,badge:'Premium',badgeClass:'popular',img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop',desc:'Luksusowy ogród zimowy z konstrukcją aluminiowo-szklaną. Panoramiczne przeszklenia do ziemi, dach ze szkła bezpiecznego i system ogrzewania podłogowego.',tags:['18 m²','Szkło bezpieczne','Ogrzewanie podł.'],features:['Aluminium klasy premium','Szkło bezpieczne VSG','Ogrzewanie podłogowe','Roletki zewnętrzne','Wentylacja mechaniczna','5 lat gwarancji'],colors:[]},
+  {id:'d5',name:'Domek Nordic 36m²',type:'domek',backUrl:'domki.html',backLabel:'Domki ogrodowe',category:'Domek letniskowy',price:52000,badge:'Duży',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop',desc:'Przestronny domek letniskowy z antresolą — idealne miejsce na wakacje dla całej rodziny. Pełna kuchnia, łazienka i sypialnia na antresoli.',tags:['36 m²','Antresola','Łazienka'],features:['Aneks kuchenny','Łazienka z prysznicem','Antresola sypialniana','Taras 12m²','Instalacja elektryczna','Kominek opcja'],colors:[]},
+  {id:'d6',name:'Sauna Barrel Duo',type:'domek',backUrl:'domki.html',backLabel:'Domki ogrodowe',category:'Sauna',price:8900,badge:'',img:'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop',desc:'Kompaktowa beczka saunowa dla 2 osób — gotowa do ustawienia w każdym ogrodzie. Drewno cedrowe, piec elektryczny i efektowny wygląd.',tags:['2 osoby','Cedr','Elektryczna'],features:['Drewno cedrowe','Piec elektryczny 4kW','Okno panoramiczne','Szybki montaż','Termostat','Oświetlenie LED'],colors:[]},
+  {id:'f1',name:'Fotel Ibiza Rattan',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Fotel ogrodowy',price:1290,badge:'Bestseller',badgeClass:'popular',img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop',desc:'Luksusowy fotel ogrodowy z naturalnego rattanu z podnóżkiem. Miękkie poduszki w zestawie, rama ze stali ocynkowanej.',tags:['Rattan naturalny','Poduszki w zestawie','+ podnóżek'],features:['Rattan certyfikowany','Rama stalowa','Poduszki wodoodporne','Łatwa konserwacja','2 lata gwarancji','Montaż 15 min'],colors:['Piaskowy','Szary','Oliwkowy','Anthracite']},
+  {id:'f2',name:'Sofa Hampton 3-os.',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Sofa ogrodowa',price:3890,badge:'Nowość',img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&auto=format&fit=crop',desc:'Przestronna sofa ogrodowa na 3 osoby z drewna akacjowego. Poduszki z tkaniny Sunbrella — odporne na UV i wilgoć.',tags:['3 osoby','Drewno akacja','Sunbrella'],features:['Drewno akacjowe','Tkanina Sunbrella','Odporna na UV','Wodoodporna','Poduszki w zestawie','3 lata gwarancji'],colors:['Ecru','Ciemny szary','Granat','Terakota']},
+  {id:'f3',name:'Stół jadalniany Toscana',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Stół ogrodowy',price:2190,badge:'',img:'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&auto=format&fit=crop',desc:'Elegancki stół jadalniany z drewna tekowego na 6-8 osób. Naturalnie odporny na czynniki atmosferyczne.',tags:['6-8 osób','Drewno teak','180×90 cm'],features:['Lite drewno teak','Odporne na warunki','Składane nogi','Naturalne olejowanie','Certyfikat FSC','5 lat gwarancji'],colors:[]},
+  {id:'f4',name:'Zestaw Lombok 4+1',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Zestaw wypoczynkowy',price:5490,badge:'Komplety',badgeClass:'popular',img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop',desc:'Kompletny zestaw wypoczynkowy: sofa 2-osobowa, 2 fotele, stolik kawowy i podnóżek. Technorattan w szarym wykończeniu.',tags:['5 elementów','Technorattan','Stolik gratis'],features:['Technorattan PE','Stelaż aluminium','Poduszki 10cm','Pokrowce w zestawie','Zmywalna tapicerka','3 lata gwarancji'],colors:['Jasnoszary','Ciemnoszary','Beżowy']},
+  {id:'f5',name:'Leżak Capri Plus',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Leżak',price:890,badge:'',img:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&auto=format&fit=crop',desc:'Wygodny leżak z regulacją oparcia w 5 pozycjach. Baza z aluminium malowanego proszkowo, tkana siatka textilene.',tags:['5 pozycji','Aluminium','Textilene'],features:['Aluminium proszkowane','Siatka textilene','5 pozycji oparcia','Kółka transportowe','Składany','Poduszka opcja'],colors:['Antracyt','Biały','Brązowy']},
+  {id:'f6',name:'Fotel bujany Dune',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Fotel ogrodowy',price:1690,badge:'Limitowany',img:'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop',desc:'Charakterystyczny fotel bujany na bazie akacjowego drewna z rattanowym plecionkiem.',tags:['Rattan + drewno','Bujany','Poduszka'],features:['Drewno akacjowe','Rattan naturalny','Ergonomiczny','Poduszka w zestawie','Odporny na warunki','Certyfikat bezp.'],colors:['Naturalny','Ciemny brąz']},
+  {id:'f7',name:'Zestaw Bistro Paris',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Zestaw bistro',price:1290,badge:'',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&auto=format&fit=crop',desc:'Klasyczny zestaw bistro w stylu paryskim — okrągły stolik i 2 krzesła ze stali lakierowanej.',tags:['Stolik + 2 krzesła','Stal lakierowana','Ø70 cm'],features:['Stal galwanizowana','Lakier poliester','Składany','Lekki i mobilny','Antykorozyjny','Certyfikat CE'],colors:['Czarny','Biały','Zielony butelkowy']},
+  {id:'f8',name:'Sofa narożna Porto L',type:'mebel',backUrl:'fotele.html',backLabel:'Meble ogrodowe',category:'Sofa ogrodowa',price:6890,badge:'Premium',badgeClass:'popular',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop',desc:'Duża narożna sofa ogrodowa idealna dla dużych rodzin. Modułowa konstrukcja, technorattan z aluminiowym stelażem.',tags:['Narożna','Modułowa','5-6 osób'],features:['Aluminium anodowane','Technorattan premium','Poduszki 12cm','Pokrowiec w zestawie','Konfiguracja L/U','5 lat gwarancji'],colors:['Szary ciemny','Beż','Oliwkowy']},
+  {id:'s1',name:'Koszenie trawnika',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Usługa ogrodnicza',price:120,unit:'jednorazowo',icon:'🌿',badge:'',img:'',desc:'Profesjonalne koszenie na żądaną wysokość, krawędziowanie i uprzątnięcie skoszonej trawy. Do 200m².',tags:['Do 200m²','Krawędziowanie','Uprzątnięcie'],features:['Profesjonalny sprzęt','Koszenie wielopoziomowe','Krawędziowanie','Uprzątnięcie trawy','Szybka realizacja','Cyklicznie lub jednorazowo'],freqs:['Jednorazowo','2× w miesiącu','Co tydzień'],colors:[]},
+  {id:'s2',name:'Strzyżenie żywopłotu',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Usługa ogrodnicza',price:180,unit:'jednorazowo',icon:'✂️',badge:'',img:'',desc:'Ręczne i mechaniczne strzyżenie żywopłotów z zebraniem i wywozem odpadów. Cena do 20mb.',tags:['Do 20mb','Wywóz odpadów','Ręczne i mechaniczne'],features:['Precyzyjne strzyżenie','Nożyce elektryczne','Wywóz odpadów','Dowolny kształt','Cena za 20mb','Termin 24h'],freqs:['Jednorazowo','Co 2 miesiące','Co miesiąc'],colors:[]},
+  {id:'s3',name:'Projekt ogrodu',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Projekt',price:1500,unit:'projekt',icon:'📐',badge:'',img:'',desc:'Kompleksowy projekt ogrodu: inwentaryzacja, koncepcja, wizualizacja 3D, dobór roślin i harmonogram realizacji.',tags:['Wizualizacja 3D','Dobór roślin','Harmonogram'],features:['Inwentaryzacja terenu','Koncepcja przestrzenna','Wizualizacja 3D','Dobór roślin','Kosztorys','Harmonogram prac'],freqs:[],colors:[]},
+  {id:'s4',name:'Sadzenie roślin',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Usługa ogrodnicza',price:290,unit:'roboczogodzina',icon:'🌸',badge:'',img:'',desc:'Profesjonalne sadzenie roślin ozdobnych, krzewów i drzew. Cena zawiera przygotowanie podłoża i podlewanie.',tags:['Przygotowanie podłoża','Podlewanie w cenie','Rośliny ozdobne'],features:['Przygotowanie gleby','Nawożenie startowe','Sadzenie precyzyjne','Pierwsze podlewanie','Porady pielęgnacyjne','Gwarancja przyjęcia'],freqs:[],colors:[]},
+  {id:'s5',name:'Pielenie rabat',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Usługa ogrodnicza',price:95,unit:'roboczogodzina',icon:'🌱',badge:'',img:'',desc:'Ręczne usuwanie chwastów z rabat kwiatowych i warzywnych, mulczowanie i profilaktyczne opryski.',tags:['Mulczowanie','Opryski','Rabaty kwiatowe'],features:['Ręczne pielenie','Mulczowanie','Opryski profilaktyczne','Wywóz chwastów','Rabaty i warzywniki','Cyklicznie lub jednorazowo'],freqs:['Jednorazowo','Co 2 tygodnie','Co tydzień'],colors:[]},
+  {id:'s6',name:'Montaż nawadniania',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Instalacja',price:2400,unit:'instalacja',icon:'💧',badge:'',img:'',desc:'Projekt i montaż automatycznego systemu nawadniania: zraszacze, mikrozraszacze lub kroplowanie. Do 200m².',tags:['Do 200m²','Automatyczny','Zraszacze lub kroplowanie'],features:['Projekt systemu','Zraszacze rotacyjne','Kroplowanie','Mikrozraszacze','Sterownik automatyczny','Gwarancja 2 lata'],freqs:[],colors:[]},
+  {id:'s7',name:'Jesienne porządki',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Usługa sezonowa',price:350,unit:'usługa',icon:'🍂',badge:'',img:'',desc:'Grabienie liści, wywóz, przycięcie bylin, zabezpieczenie roślin przed zimą i przykrycie agrowłókniną.',tags:['Grabienie liści','Zabezpieczenie roślin','Agrowłóknina'],features:['Grabienie i wywóz liści','Przycięcie bylin','Zabezpieczenie roślin','Agrowłóknina w cenie','Mulczowanie rabat','Porządki tarasu'],freqs:[],colors:[]},
+  {id:'s8',name:'Nawożenie profesjonalne',type:'usluga',backUrl:'uslugi.html',backLabel:'Usługi ogrodnicze',category:'Usługa ogrodnicza',price:150,unit:'aplikacja',icon:'🌾',badge:'',img:'',desc:'Dobór i aplikacja nawozów wolnodziałających lub granulowanych pod rodzaj roślin i stan gleby.',tags:['Dobór nawozu','Wolnodziałające','Pod rodzaj roślin'],features:['Analiza gleby','Dobór nawozu','Nawozy granulowane','Nawozy wolnodziałające','Aplikacja mechaniczna','Zalecenia pielęgnacyjne'],freqs:['Jednorazowo','2× w sezonie','Co miesiąc'],colors:[]},
+];
+
+const colorMap={'Piaskowy':'#e8d5a3','Szary':'#9e9e9e','Oliwkowy':'#7a8c4e','Anthracite':'#3d3d3d','Ecru':'#f5f0e0','Ciemny szary':'#555','Granat':'#1a2a5e','Terakota':'#c0602c','Jasnoszary':'#ccc','Ciemnoszary':'#555','Beżowy':'#d4b896','Antracyt':'#3a3a3a','Biały':'#f0f0f0','Brązowy':'#8b6347','Naturalny':'#c9a96e','Ciemny brąz':'#4a3010','Czarny':'#222','Zielony butelkowy':'#1f4e2e','Beż':'#d6c5a0','Szary ciemny':'#5a5a5a'};
+
+let qty=1, selectedColor='', selectedFreq='';
+
+function render(){
+  const params=new URLSearchParams(location.search);
+  const id=params.get('id');
+  const p=allProducts.find(x=>x.id===id);
+  const container=document.getElementById('product-content');
+
+  if(!p){
+    document.title='Nie znaleziono — GardenCraft';
+    container.innerHTML=`<div class="not-found"><div class="not-found-icon">🌿</div><div class="not-found-title">Produkt nie znaleziony</div><div class="not-found-desc">Sprawdź ofertę i wybierz interesujący Cię produkt.</div><div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;"><a href="domki.html" class="btn-primary">Domki</a><a href="fotele.html" class="btn-outline">Meble</a><a href="uslugi.html" class="btn-outline">Usługi</a></div></div>`;
+    return;
+  }
+
+  document.title=`${p.name} — GardenCraft`;
+
+  const tagsHtml=p.tags&&p.tags.length?`<div class="product-tags">${p.tags.map(t=>`<span class="product-tag">${t}</span>`).join('')}</div>`:'';
+  const featuresHtml=p.features&&p.features.length?`<div class="features-title">Co zawiera oferta</div><div class="features-grid">${p.features.map(f=>`<div class="feature-chip">${f}</div>`).join('')}</div>`:'';
+  const badgeHtml=p.badge?`<span class="product-badge ${p.badgeClass||''}">${p.badge}</span><br/>`:'';
+  const imgHtml=p.img?`<div class="product-img-wrap"><img src="${p.img}" alt="${p.name}"/></div>`:`<div class="product-img-placeholder">${p.icon||'🌿'}</div>`;
+  const colorsHtml=p.colors&&p.colors.length?`<div class="colors-wrap"><div class="colors-label">Dostępne kolory</div><div class="color-dots" id="color-dots">${p.colors.map(c=>`<div class="color-dot" style="background:${colorMap[c]||'#ccc'}" title="${c}" onclick="selectColor('${c}',this)"></div>`).join('')}</div></div>`:'';
+  const freqsHtml=p.freqs&&p.freqs.length?`<div class="freqs-wrap"><div class="freqs-label">Częstotliwość</div><div class="freq-options" id="freq-options">${p.freqs.map(f=>`<button class="freq-btn" onclick="selectFreq('${f}',this)">${f}</button>`).join('')}</div></div>`:'';
+  const unitLabel=p.unit?` <span class="product-unit">/ ${p.unit}</span>`:'';
+
+  container.innerHTML=`
+    <a href="${p.backUrl}" class="back-link">← ${p.backLabel}</a>
+    <div class="product-layout">
+      ${imgHtml}
+      <div>
+        ${badgeHtml}
+        <div class="product-category">${p.category}</div>
+        <h1 class="product-name">${p.name}</h1>
+        <div class="product-price">${p.price.toLocaleString('pl-PL')} zł${unitLabel}</div>
+        <p class="product-desc">${p.desc}</p>
+        ${tagsHtml}
+        ${colorsHtml}
+        ${freqsHtml}
+        ${featuresHtml}
+        <div class="qty-row">
+          <span class="qty-label">Ilość</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <span class="qty-num" id="qty-display">1</span>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn-primary" onclick="addProduct()">Dodaj do koszyka →</button>
+          <a href="koszyk.html" class="btn-outline">Zobacz koszyk</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function changeQty(delta){
+  qty=Math.max(1,qty+delta);
+  document.getElementById('qty-display').textContent=qty;
+}
+function selectColor(color,el){
+  selectedColor=color;
+  document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectFreq(freq,el){
+  selectedFreq=freq;
+  document.querySelectorAll('.freq-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function addProduct(){
+  const params=new URLSearchParams(location.search);
+  const id=params.get('id');
+  const p=allProducts.find(x=>x.id===id);
+  if(!p) return;
+  const cartId=p.id+(selectedColor?'_'+selectedColor:'')+(selectedFreq?'_'+selectedFreq:'');
+  const name=p.name+(selectedColor?' — '+selectedColor:'')+(selectedFreq?' ('+selectedFreq+')':'');
+  addToCart({id:cartId,name,price:p.price,img:p.img||'',qty,category:p.category});
+}
+
+render();
+</script>
+</body>
+</html>

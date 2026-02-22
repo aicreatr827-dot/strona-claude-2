@@ -271,8 +271,6 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target===docu
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 renderServices();
-const _openParam=new URLSearchParams(location.search).get('open');
-if(_openParam) setTimeout(()=>openModal(_openParam.split('_')[0]),400);
 </script>
 </body>
 </html>

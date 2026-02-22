@@ -178,8 +178,6 @@ document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('clic
 }));
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.1});
 renderProducts();
-const _openParam=new URLSearchParams(location.search).get('open');
-if(_openParam) setTimeout(()=>openModal(_openParam.split('_')[0]),400);
 </script>
 </body>
 </html>

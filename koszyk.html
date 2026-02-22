@@ -169,7 +169,7 @@ function renderCart(){
         <div class="cart-img">${item.img?`<img src="${item.img}" alt="${item.name}"/>`:'<span style="font-size:2rem">🌿</span>'}</div>
         <div>
           <div class="cart-category">${item.category||'GardenCraft'}</div>
-          <div class="cart-name">${item.name}</div>
+          <a class="cart-name" href="produkt.html?id=${item.id.split('_')[0]}" style="text-decoration:none;color:var(--text-dark);cursor:pointer;" onmouseover="this.style.color='var(--green-deep)'" onmouseout="this.style.color='var(--text-dark)'">${item.name}</a>
           <div class="cart-unit-price">${item.price.toLocaleString('pl-PL')} zł / szt.</div>
         </div>
         <div class="cart-right">
@@ -179,7 +179,6 @@ function renderCart(){
             <span class="qty-num">${item.qty}</span>
             <button class="qty-btn" onclick="changeItemQty('${item.id}',1)">+</button>
           </div>
-          <a class="remove-btn" href="${getProductPage(item.id)}?open=${item.id}" style="text-decoration:none;color:var(--green-mid);font-weight:700;">Zobacz →</a>
           <button class="remove-btn" onclick="removeItem('${item.id}')">Usuń</button>
         </div>
       </div>`).join('');
