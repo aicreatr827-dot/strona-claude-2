@@ -148,6 +148,13 @@
 <script src="shared.js"></script>
 <script>
 let discountApplied=false;
+function getProductPage(id){
+  const base=id.split('_')[0];
+  if(base.startsWith('d')) return 'domki.html';
+  if(base.startsWith('f')) return 'fotele.html';
+  if(base.startsWith('s')) return 'uslugi.html';
+  return '#';
+}
 function renderCart(){
   const cart=getCart();
   const container=document.getElementById('cart-items-container');
@@ -172,6 +179,7 @@ function renderCart(){
             <span class="qty-num">${item.qty}</span>
             <button class="qty-btn" onclick="changeItemQty('${item.id}',1)">+</button>
           </div>
+          <a class="remove-btn" href="${getProductPage(item.id)}?open=${item.id}" style="text-decoration:none;color:var(--green-mid);font-weight:700;">Zobacz →</a>
           <button class="remove-btn" onclick="removeItem('${item.id}')">Usuń</button>
         </div>
       </div>`).join('');
