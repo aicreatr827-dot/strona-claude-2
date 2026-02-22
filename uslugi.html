@@ -235,7 +235,7 @@ function renderServices(){
       <div class="svc-right">
         <div><div class="svc-price-val">${s.price.toLocaleString('pl-PL')} zł</div><div class="svc-price-unit">${s.unit}</div></div>
         <div style="display:flex;gap:0.5rem;">
-          <button class="btn-outline" style="padding:0.5rem 1rem;font-size:0.82rem;" onclick="openModal('${s.id}')">Szczegóły</button>
+          <a class="btn-outline" href="produkt.html?id=${s.id}" style="padding:0 var(--space-2);height:40px;font-size:var(--text-small);">Szczegóły</a>
           <button class="add-to-cart-btn" onclick="quickAdd('${s.id}',this)">🛒 +</button>
         </div>
       </div>

@@ -142,7 +142,7 @@ function renderProducts(filter='all'){
         <div class="product-footer">
           <div class="product-price">${p.price.toLocaleString('pl-PL')} zł<span>cena netto</span></div>
           <div style="display:flex;gap:0.5rem;">
-            <button class="btn-outline" style="padding:0.5rem 0.9rem;font-size:0.8rem;" onclick="openModal('${p.id}')">Szczegóły</button>
+            <a class="btn-outline" href="produkt.html?id=${p.id}" style="padding:0 var(--space-2);height:40px;font-size:var(--text-small);">Szczegóły</a>
             <button class="add-to-cart-btn" onclick="quickAdd('${p.id}',this)">🛒 +</button>
           </div>
         </div>
